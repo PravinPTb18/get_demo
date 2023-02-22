@@ -6,30 +6,38 @@ import 'package:get_demo/controller/users_controller.dart';
 class ApiDemoPage extends StatelessWidget {
   ApiDemoPage({super.key});
 
+  // Creating instance using Get.put() to make it available for all "child" routes.
   final UsersController uc = Get.put(UsersController());
   late double _height;
 
   @override
   Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height * 0.7;
+    _height = MediaQuery.of(context).size.height * 0.8;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Api Demo ${uc.count}"),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Api Demo"),
+            // Displays the count value using obx
+            Obx(() => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    uc.count.toString(),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16.0),
+                  ),
+                )),
+          ],
+        ),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Obx(() => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  uc.count.toString(),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16.0),
-                ),
-              )),
           OutlinedButton(
               onPressed: () {
+                // decrease the count value
                 uc.decrementCount();
               },
               child: const Text("Decrement count")),
@@ -39,6 +47,7 @@ class ApiDemoPage extends StatelessWidget {
     );
   }
 
+  // Displaying the list of user using obx
   Widget _listOfUser() {
     return Obx(() {
       return uc.isLoading.isTrue
